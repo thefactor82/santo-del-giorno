@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Santo del giorno</title>
+  <style>
+    body { font-family: sans-serif; font-size: 16px; margin: 10px; max-width: 320px; }
+    img { max-width: 100px; float: left; margin-right: 10px; }
+    .santo { overflow: auto; }
+  </style>
+</head>
+<body>
+  <div id="santo">Caricamento...</div>
+  <script>
+    fetch('https://www.santodelgiorno.it/santi.json')
+      .then(res => res.json())
+      .then(data => {
+        const santo = data.find(s => s.default === "1");
+        const html = `
+          <div class="santo">
+            <img src="${santo.urlimmagine}" alt="santo">
+            <h2>${santo.nome}</h2>
+            <p><strong>${santo.tipologia}</strong></p>
+            <p>${santo.descrizione || ""}</p>
+            <p style="text-align:right;"><a href="${santo.permalink}" target="_blank">Leggi di più</a></p>
+          </div>
+        `;
+        document.getElementById('santo').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('santo').innerText = 'Errore nel caricamento.';
+      });
+  </script>
+</body>
+</html>
